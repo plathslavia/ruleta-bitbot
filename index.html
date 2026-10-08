@@ -6,39 +6,22 @@
 <title>Ruleta BitBot</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Saira:ital,wght@1,700;1,800;1,900&display=swap" rel="stylesheet">
 <style>
-/* Layout: estilo Apple. Barra superior translúcida fija con la sesión; debajo dos columnas: la ruleta con su control segmentado a la izquierda, y el resumen y los comandos en listas agrupadas a la derecha. Claro u oscuro según el sistema. */
+/* Layout: estilo de los paneles del canal de insanesqt. Fondo casi negro, paneles grafito con marco rojo carmesí que brilla, títulos en cursiva gruesa con relleno metalizado. Banner arriba como sus paneles; debajo la ruleta a la izquierda y el resumen y los comandos a la derecha. Tema oscuro fijo, a propósito. */
 :root{
-  --bg:#f5f5f7; --card:#ffffff; --fill:#f2f2f7; --fill-2:#e5e5ea; --sep:#d8d8dd;
-  --fg:#1d1d1f; --muted:#6e6e73; --accent:#0071e3; --accent-tint:rgba(0,113,227,.1); --on-accent:#ffffff;
-  --ok:#248a3d; --ok-tint:rgba(52,199,89,.15); --danger:#d70015; --danger-tint:rgba(255,59,48,.1);
-  --bar:rgba(245,245,247,.8); --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.05);
-  --seg1:#007aff; --seg2:#5856d6; --seg3:#af52de; --seg4:#ff2d55; --seg5:#ff9500; --seg6:#34c759; --seg7:#30b0c7; --seg8:#ff3b30;
-  --seg-ink:#ffffff; --pointer:#1d1d1f;
-  --f-display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","Segoe UI",system-ui,sans-serif;
-  --f-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",system-ui,sans-serif;
-  --f-mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
-  --r:10px; --r-card:20px;
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#000000; --card:#1c1c1e; --fill:#2c2c2e; --fill-2:#3a3a3c; --sep:#38383a;
-    --fg:#f5f5f7; --muted:#98989d; --accent:#0a84ff; --accent-tint:rgba(10,132,255,.2); --on-accent:#ffffff;
-    --ok:#30d158; --ok-tint:rgba(48,209,88,.18); --danger:#ff453a; --danger-tint:rgba(255,69,58,.16);
-    --bar:rgba(22,22,23,.75); --shadow:none;
-    --seg1:#0a84ff; --seg2:#5e5ce6; --seg3:#bf5af2; --seg4:#ff375f; --seg5:#ff9f0a; --seg6:#30d158; --seg7:#40c8e0; --seg8:#ff453a;
-    --seg-ink:#ffffff; --pointer:#f5f5f7;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#000000; --card:#1c1c1e; --fill:#2c2c2e; --fill-2:#3a3a3c; --sep:#38383a;
-  --fg:#f5f5f7; --muted:#98989d; --accent:#0a84ff; --accent-tint:rgba(10,132,255,.2); --on-accent:#ffffff;
-  --ok:#30d158; --ok-tint:rgba(48,209,88,.18); --danger:#ff453a; --danger-tint:rgba(255,69,58,.16);
-  --bar:rgba(22,22,23,.75); --shadow:none;
-  --seg1:#0a84ff; --seg2:#5e5ce6; --seg3:#bf5af2; --seg4:#ff375f; --seg5:#ff9f0a; --seg6:#30d158; --seg7:#40c8e0; --seg8:#ff453a;
-  --seg-ink:#ffffff; --pointer:#f5f5f7;
+  --bg:#0e0e10; --card:#17171b; --fill:#202026; --fill-2:#2b2b32; --sep:#2f2f36;
+  --fg:#efeff1; --muted:#a3a3ae; --accent:#e5194f; --accent-tint:rgba(229,25,79,.16); --on-accent:#ffffff;
+  --accent-deep:#8f0b33; --glow:rgba(229,25,79,.5);
+  --ok:#3ddc84; --ok-tint:rgba(61,220,132,.14); --danger:#ff5468; --danger-tint:rgba(255,84,104,.14);
+  --bar:rgba(14,14,16,.86); --shadow:0 0 0 1px rgba(229,25,79,.18),0 10px 30px rgba(0,0,0,.45);
+  --chrome:linear-gradient(180deg,#ffffff 0%,#f1f1f4 38%,#9a9aa4 50%,#d9d9de 64%,#ffffff 100%);
+  --seg1:#c8102e; --seg2:#26262c; --seg3:#e0315f; --seg4:#34343c; --seg5:#9b0d3a; --seg6:#1d1d22; --seg7:#ff4d6d; --seg8:#2c2c33;
+  --seg-ink:#ffffff; --pointer:#e5194f;
+  --f-display:"Saira","Arial Black","Segoe UI",system-ui,sans-serif;
+  --f-body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --f-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:6px; --r-card:8px;
   color-scheme:dark;
 }
 html,body{background:var(--bg);color:var(--fg)}
@@ -131,7 +114,7 @@ h2{font-family:var(--f-display);font-weight:600;font-size:22px;letter-spacing:-.
 .result.hit{background:var(--accent-tint)}
 .result .big{font-family:var(--f-display);font-weight:700;font-size:clamp(22px,3.2vw,28px);line-height:1.12;letter-spacing:-.03em;text-wrap:balance}
 .result .who-line{color:var(--muted);font-size:14px}
-.result ol{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;max-height:240px;overflow-y:auto}
+.result ol{position:relative;margin:4px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;max-height:240px;overflow-y:auto}
 .result li{display:flex;gap:10px;align-items:baseline;font-size:15px;padding:5px 0;border-top:1px solid var(--sep)}
 .result li:first-child{border-top:0}
 .result li .n{font-size:12px;color:var(--muted);width:2.6em;flex:none;font-variant-numeric:tabular-nums}
@@ -215,6 +198,73 @@ td.chk input{width:18px;height:18px;accent-color:var(--accent)}
 .msg{font-size:13px;color:var(--ok)}
 .msg.err{color:var(--danger)}
 
+/* ---------- piel insanesqt ---------- */
+body{letter-spacing:0;background:radial-gradient(1200px 500px at 50% -120px,rgba(229,25,79,.16),transparent 70%),var(--bg);background-attachment:fixed}
+.top{border-bottom:1px solid rgba(229,25,79,.35);box-shadow:0 1px 18px rgba(229,25,79,.18)}
+.brand-name{font-family:var(--f-display);font-style:italic;font-weight:800;font-size:19px;letter-spacing:.01em;text-transform:uppercase;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tag{color:#fff;background:linear-gradient(180deg,var(--accent),var(--accent-deep));font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;box-shadow:0 0 12px var(--glow)}
+.tag::before{background:#fff;box-shadow:0 0 6px #fff}
+
+/* banner como los paneles del canal */
+.banner{position:relative;isolation:isolate;padding:26px 20px 24px;text-align:center;align-items:center;border:1px solid rgba(229,25,79,.55);border-radius:6px;overflow:hidden;
+  background:
+    linear-gradient(115deg,transparent 0 14%,rgba(229,25,79,.55) 14.4%,rgba(229,25,79,0) 19%,transparent 19% 76%,rgba(229,25,79,.4) 76.4%,rgba(229,25,79,0) 82%),
+    linear-gradient(115deg,transparent 0 8%,rgba(255,255,255,.06) 8.2%,transparent 10% 88%,rgba(255,255,255,.05) 88.2%,transparent 90%),
+    radial-gradient(120% 160% at 50% 135%,rgba(160,12,52,.75),transparent 60%),
+    linear-gradient(180deg,#1d1d23,#0f0f12);
+  box-shadow:0 0 22px rgba(229,25,79,.35),inset 0 0 0 1px rgba(255,255,255,.03),inset 0 -2px 0 rgba(229,25,79,.9)}
+.banner::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(0deg,rgba(229,25,79,.22),transparent);z-index:-1}
+h1,h2,.result .big,details.settings>summary,.stat .v,.hub b{font-family:var(--f-display);font-style:italic}
+h1{font-weight:900;font-size:clamp(34px,6vw,58px);line-height:1;letter-spacing:.01em;text-transform:uppercase;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 rgba(0,0,0,.85)) drop-shadow(0 0 10px rgba(229,25,79,.35));padding:0 .08em}
+.lede{color:#d8d8de;font-size:15px;font-weight:500}
+.lede b{color:#fff;font-weight:700}
+
+h2{font-weight:800;font-size:22px;letter-spacing:.01em;text-transform:uppercase;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.1em}
+.panel{background:linear-gradient(180deg,#19191e,#141418);border:1px solid #2a2a31;position:relative}
+.panel::before{content:"";position:absolute;left:14px;right:14px;top:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 12px var(--glow);border-radius:2px}
+details.settings{background:linear-gradient(180deg,#19191e,#141418);border:1px solid #2a2a31}
+details.settings>summary{font-weight:800;text-transform:uppercase;letter-spacing:.01em;font-size:18px}
+
+.btn{border-radius:5px;background:var(--fill);color:#fff;font-weight:600}
+.btn:hover{background:var(--fill-2)}
+.btn.primary{background:linear-gradient(180deg,#ff2f63,var(--accent) 45%,var(--accent-deep));color:#fff;font-family:var(--f-display);font-style:italic;font-weight:800;text-transform:uppercase;letter-spacing:.03em;box-shadow:0 0 16px var(--glow),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn.primary:hover{background:linear-gradient(180deg,#ff4775,#f02a5d 45%,#a00d3a)}
+.btn.ghost{background:transparent}
+.btn.warn{color:var(--danger)}
+.btn.icon{border-radius:5px}
+.btn.icon[aria-pressed=true]{color:#fff;background:var(--fill-2);box-shadow:inset 0 0 0 1px rgba(229,25,79,.5)}
+.seg .btn{color:var(--muted)}
+.seg .btn[aria-pressed=true]{color:#fff;background:linear-gradient(180deg,var(--accent),var(--accent-deep))!important;box-shadow:0 0 10px var(--glow)}
+
+.modes{background:#0f0f12;border:1px solid #2a2a31;border-radius:6px}
+.mode{border-radius:4px}
+.mode b{font-family:var(--f-display);font-style:italic;font-weight:800;text-transform:uppercase;font-size:15px;letter-spacing:.02em}
+.mode[aria-selected=true]{background:linear-gradient(180deg,var(--accent),var(--accent-deep))!important;box-shadow:0 0 14px var(--glow)!important}
+.mode[aria-selected=true] span{color:rgba(255,255,255,.85)}
+
+#wheel{filter:drop-shadow(0 0 18px rgba(229,25,79,.45)) drop-shadow(0 8px 20px rgba(0,0,0,.6))}
+.pointer{filter:drop-shadow(0 0 8px var(--glow))}
+.hub{background:radial-gradient(circle at 50% 35%,#26262d,#0f0f12);box-shadow:0 0 0 3px var(--accent),0 0 18px var(--glow)}
+.hub b{font-weight:900;background:var(--chrome);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hub small{text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+
+.result{background:#121216;border:1px solid #2a2a31}
+.result.hit{background:linear-gradient(90deg,rgba(229,25,79,.2),rgba(229,25,79,.04));border-color:rgba(229,25,79,.55);box-shadow:0 0 18px rgba(229,25,79,.2)}
+.result .big{font-weight:900;text-transform:uppercase;letter-spacing:.01em}
+.stat{background:#121216;border:1px solid #2a2a31;border-radius:6px}
+.stat .v{font-weight:800}
+.bars .track{background:#121216;border-radius:4px}
+.bars .fill{background:linear-gradient(90deg,var(--accent-deep),var(--accent));border-radius:4px;opacity:.75}
+.entries{background:#121216;border:1px solid #2a2a31;border-radius:6px}
+.cmd code{background:#0b0b0d;border:1px solid #2a2a31;border-radius:4px;color:#ffd6e0}
+.chip{border-radius:4px}
+.chip.x6{color:#fff;background:rgba(229,25,79,.35)}
+.multi{background:#121216;border:1px solid #2a2a31;border-radius:6px}
+select,input[type=text],input[type=number],textarea{border-radius:5px;background:#0f0f12;border-color:#2a2a31}
+.tablewrap{background:#121216;border:1px solid #2a2a31;border-radius:6px}
+td input[type=text],td input[type=number]{background:#0b0b0d}
+details.sub summary{color:#ff6b8f}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -223,7 +273,7 @@ td.chk input{width:18px;height:18px;accent-color:var(--accent)}
   <div class="top-in">
     <div class="brand">
       <span class="brand-name">Ruleta BitBot</span>
-      <span class="tag">Bitbot activo</span>
+      <span class="tag">Bitbot on</span>
     </div>
     <div class="sess">
       <label for="sessSelect">Sesión</label>
@@ -236,9 +286,9 @@ td.chk input{width:18px;height:18px;accent-color:var(--accent)}
 </header>
 
 <div class="wrap">
-  <div class="hero">
-    <h1>Gira. Copia. Listo.</h1>
-    <p class="lede">Cada resultado queda guardado en la sesión con su comando de BitBot.</p>
+  <div class="hero banner">
+    <h1>Ruleta BitBot</h1>
+    <p class="lede"><b>BITBOT ON</b> · Podés trolearme donando bits</p>
   </div>
 
   <main class="grid">
@@ -861,7 +911,11 @@ async function doSpin() {
         items[k].classList.remove("pending");
         items[k].lastChild.textContent = a.name;
         $("resWho").textContent = `${what} para ${user} · giro ${k + 1} de ${n}`;
-        if (!skipAnim) items[k].scrollIntoView({ block: "nearest" });
+        if (!skipAnim) {
+          // desplaza solo la lista de resultados, sin mover la página
+          const li = items[k], bottom = li.offsetTop + li.offsetHeight;
+          if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight;
+        }
       } else {
         $("resWho").textContent = `Le tocó a ${user} · ${fmt(a.bits)} bits de valor`;
       }
