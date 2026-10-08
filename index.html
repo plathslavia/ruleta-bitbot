@@ -614,29 +614,27 @@ function randInt(n) {
 
 function animateTo(target, dur) {
   return new Promise(res => {
-    // Con la pestaña oculta el navegador pausa las animaciones: el giro se resuelve al instante.
-    if (document.hidden) { rotation = target % TAU; drawWheel(); res(); return; }
+    // El tiempo del giro lo lleva un temporizador y los tics se programan en el audio,
+    // así sigue sonando y avanzando aunque la pestaña esté oculta (el dibujo se pone al día al volver).
     const from = rotation, t0 = performance.now();
     const ease = t => 1 - Math.pow(1 - t, 4);
+    const bus = scheduleTicks(from, target, dur);
     let done = false;
-    const onVis = () => { if (document.hidden) finish(); };
-    function finish() {
+    function finish(early) {
       if (done) return;
       done = true;
-      document.removeEventListener("visibilitychange", onVis);
+      clearTimeout(timer);
+      if (early && bus) { try { bus.disconnect(); } catch (e) {} }
       rotation = target % TAU; drawWheel(); res();
     }
-    document.addEventListener("visibilitychange", onVis);
-    const segIdx = () => Math.floor(((((-rotation) % TAU) + TAU) % TAU) / (TAU / tickN));
-    let lastIdx = segIdx();
+    const timer = setTimeout(() => finish(false), dur);
     function step(now) {
       if (done) return;
+      if (skipAnim) { finish(true); return; }
       const p = Math.min(1, (now - t0) / dur);
       rotation = from + (target - from) * ease(p);
-      const idx = segIdx();
-      if (idx !== lastIdx) { lastIdx = idx; playTick(); }
       drawWheel();
-      if (p < 1) requestAnimationFrame(step); else finish();
+      if (p < 1) requestAnimationFrame(step); else finish(false);
     }
     requestAnimationFrame(step);
   });
@@ -665,18 +663,32 @@ function audio() {
     return sound.ctx;
   } catch (e) { return null; }
 }
-function tone(freq, start, dur, type, peak) {
+function tone(freq, start, dur, type, peak, dest) {
   const ac = sound.ctx, o = ac.createOscillator(), g = ac.createGain();
   o.type = type || "sine";
   o.frequency.setValueAtTime(freq, start);
   g.gain.setValueAtTime(0.0001, start);
   g.gain.exponentialRampToValueAtTime(peak || 0.2, start + 0.008);
   g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
-  o.connect(g); g.connect(sound.master);
+  o.connect(g); g.connect(dest || sound.master);
   o.start(start); o.stop(start + dur + 0.05);
 }
+function scheduleTicks(from, target, dur) {
+  const ac = audio(); if (!ac) return null;
+  const bus = ac.createGain(); bus.connect(sound.master);
+  const seg = TAU / tickN, span = target - from, start = ac.currentTime + 0.02;
+  let last = -1;
+  for (let k = Math.ceil(from / seg + 1e-9); k * seg <= target; k++) {
+    const x = (k * seg - from) / span;
+    const t = (1 - Math.pow(1 - x, 0.25)) * dur / 1000;
+    if (t - last < 0.03) continue;
+    last = t;
+    tone(2100, start + t, 0.03, "triangle", 0.22, bus);
+    tone(1050, start + t, 0.018, "square", 0.05, bus);
+  }
+  return bus;
+}
 function playTick() {
-  if (document.hidden) return;
   const ac = audio(); if (!ac) return;
   const t = ac.currentTime;
   if (t - sound.lastTick < 0.03) return;
@@ -685,14 +697,12 @@ function playTick() {
   tone(1050, t, 0.018, "square", 0.05);
 }
 function playDing() {
-  if (document.hidden) return;
   const ac = audio(); if (!ac) return;
   const t = ac.currentTime + 0.01;
   tone(1318.5, t, 0.45, "sine", 0.22);
   tone(1975.5, t + 0.07, 0.55, "sine", 0.13);
 }
 function playWin(big) {
-  if (document.hidden) return;
   const ac = audio(); if (!ac) return;
   const t = ac.currentTime + 0.02;
   const notes = big ? [783.99, 1046.5, 1318.5, 1568, 2093] : [1046.5, 1318.5, 1568, 2093];
@@ -820,7 +830,7 @@ async function doSpin() {
       if (k === n - 1) playWin(a.bits >= 800);
       else if (!skipAnim) playDing();
       if (!skipAnim || k === n - 1) renderLog();
-      if (k < n - 1 && !skipAnim && !document.hidden) await sleep(reduced() ? 150 : n > 6 ? 300 : 700);
+      if (k < n - 1 && !skipAnim) await sleep(reduced() ? 150 : n > 6 ? 300 : 700);
     }
     if (n > 1) {
       drawWheel();
